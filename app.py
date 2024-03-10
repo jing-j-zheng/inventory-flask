@@ -1,7 +1,9 @@
+
 import datetime
 from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
+from flask_cors import cross_origin
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('DB_URL')
@@ -26,6 +28,7 @@ db.create_all()
 
 # get all items
 @app.route('/items', methods=['GET'])
+@cross_origin()
 def get_items():
     try:
         items = Item.query.all()
@@ -37,6 +40,7 @@ def get_items():
     
 # get a user by id
 @app.route('/items/<int:id>', methods=['GET']) 
+@cross_origin()
 def get_item(id):
     try:
         item = Item.query.filter_by(id=id).first()
@@ -46,7 +50,8 @@ def get_item(id):
 
 
 # craete  an item
-@app.route('/item', methods=['POST'])
+@app.route('/items', methods=['POST'])
+@cross_origin()
 def craete_user():
     try:
         data = request.get_json()
@@ -66,6 +71,7 @@ def craete_user():
 
 # update an item
 @app.route('/items/<int:id>', methods=['PUT'])
+@cross_origin()
 def update_user(id):
     try:
         item = Item.query.filter_by(id=id).first()
@@ -80,6 +86,8 @@ def update_user(id):
         return make_response(jsonify({'message': 'error updating item'}), 500)
     
 # delete an item
+@app.route('/items/<int:id>', methods=['DELETE'])
+@cross_origin()
 def delete_user(id):
     try:
         item = Item.query.filter_by(id=id).first()
