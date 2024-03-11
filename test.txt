@@ -1,1 +1,2 @@
-curl -X POST -H "Content-type: application/json" -d "{\"name\" : \"Item1\", \"description\" : \"My Item One\",\"quantity\" : \"250\",  \"price\" : \"12.2\"}" "localhost:4000/item"
+curl -X POST -H "Content-type: application/json" -d "{\"name\" : \"Item1\", \"description\" : \"My Item One\",\"quantity\" : \"250\",  \"price\" : \"12.2\"}" "localhost:4000/items"
+curl -X GET -H "Content-type: application/json" "localhost:4000/items"

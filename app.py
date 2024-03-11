@@ -18,10 +18,10 @@ class Item(db.Model):
     description = db.Column(db.String(255))
     quantity = db.Column(db.Integer)
     price = db.Column(db.Float)
-    date = db.Column(db.DateTime, default=datetime.datetime.now)
+    updateDatetime = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def json(self):
-        return {'id': self.id, 'name': self.name, 'description': self.description, 'quantity': self.quantity, 'price': self.price }
+        return {'id': str(self.id), 'name': self.name, 'description': self.description, 'quantity': self.quantity, 'price': self.price }
 
 db.create_all()
 
@@ -32,7 +32,7 @@ db.create_all()
 def get_items():
     try:
         items = Item.query.all()
-        return make_response(jsonify({'items': [item.json() for item in items]}), 200)
+        return make_response(jsonify( [item.json() for item in items]), 200)
         #return make_response(jsonify({'message': 'no items found'}), 404)
     except Exception as e:
         return make_response(jsonify({'message': 'no items found'}), 500)
@@ -52,19 +52,22 @@ def get_item(id):
 # craete  an item
 @app.route('/items', methods=['POST'])
 @cross_origin()
-def craete_user():
+def craete_item():
     try:
         data = request.get_json()
         print("data is " + format(data))
-       # if data is not None:
-       #     return make_response(jsonify({'name': format(data)}), 200)
-       # else:
-       #     return make_response(jsonify({'message': 'data not found'}), 400)
-
+        #if data is not None:
+        #    return make_response(jsonify({'name': format(data)}), 200)
+        #else:
+        #    return make_response(jsonify({'message': 'data not found'}), 400)
+       
         new_item = Item(name=data['name'], description=data['description'], quantity=data['quantity'], price=data['price'])
+        #new_item = Item(name=data['name'], description=data['description'])
         db.session.add(new_item)
         db.session.commit()
-        return make_response(jsonify({'message': 'item created'}), 201)
+        # return make_response(jsonify({'message': 'item created'}), 201)
+        items = Item.query.all()
+        return make_response(jsonify( [item.json() for item in items]), 200)
     except Exception as e:
         return make_response(jsonify({'message', 'error createing item'}), 500)
 
@@ -78,6 +81,8 @@ def update_user(id):
         if item:
             data = request.get_json()
             item.name = data['name']
+            item.description = data['description']
+            item.quantity = data['quantity']
             item.price = data['price']
             db.session.commit()
             return make_response(jsonify({'message': 'item updated'}), 200)
