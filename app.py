@@ -85,7 +85,7 @@ def update_user(id):
             item.quantity = data['quantity']
             item.price = data['price']
             db.session.commit()
-            return make_response(jsonify({'message': 'item updated'}), 200)
+            return make_response(jsonify(item.json()), 200)
         return make_response(jsonify({'message': 'item not found'}), 404)
     except Exception:
         return make_response(jsonify({'message': 'error updating item'}), 500)
