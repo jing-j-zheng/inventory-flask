@@ -21,7 +21,7 @@ class Item(db.Model):
     updateDatetime = db.Column(db.DateTime, default=datetime.datetime.now)
 
     def json(self):
-        return {'id': str(self.id), 'name': self.name, 'description': self.description, 'quantity': self.quantity, 'price': self.price }
+        return {'id': str(self.id), 'name': self.name, 'description': self.description, 'quantity': self.quantity, 'price': self.price, 'updateDatetime': self.updateDatetime }
 
 db.create_all()
 
